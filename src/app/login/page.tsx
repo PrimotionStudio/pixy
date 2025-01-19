@@ -35,20 +35,30 @@ export default function LoginPage() {
             const response = await axios.post('/api/login', user);
             if (response.status == 200) {
                 toast.success('Login successful');
-                router.push('/dashboard');
+                router.push('/home');
             } else {
                 toast.error('A login error occured');
                 setLoading(false);
             }
         } catch (error) {
-            if (error instanceof AxiosError) toast.error(error.response?.data.error || error.message);
-            else toast.error('An unknown error occured');
+            if (error instanceof AxiosError)
+                toast.error(error.response?.data.error || error.message);
+            else
+                toast.error('An unknown error occured');
             setLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-100 via-blue-100 to-green-100 flex items-center justify-center p-4">
+        <div className="
+        min-h-screen 
+        bg-gradient-to-br
+        from-purple-100
+        via-blue-100 
+        to-green-100
+        flex 
+        items-center 
+        justify-center p-4">
             <Card className="w-full max-w-md">
                 <form action="" onSubmit={handleLogin}>
                     <CardHeader className="space-y-1">
