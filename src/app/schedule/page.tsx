@@ -24,6 +24,10 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import SocialMediaCheckboxes from '@/components/ui/layout/socialMediaCheckboxes';
+import { Separator } from '@/components/ui/separator';
+import PostCard from '@/components/ui/layout/postCard';
 
 
 function HomePage() {
@@ -32,29 +36,59 @@ function HomePage() {
             <Navbar />
             <div className="w-full flex-1 flex justify-start items-center gap-x-20">
                 <Sidebar />
-                <div className="w-full flex-col flex pt-20 self-start gap-y-10">
-                    <Alert className='w-fit'>
-                        <Sparkles className="h-4 w-4" />
-                        <AlertTitle>Welcome to Pixy!</AlertTitle>
-                        <AlertDescription>
-                            You can manually write-up social media posts and schedule them add tags people along with it, or leave it all up to <span className="font-bold">Pixy</span>.
-                        </AlertDescription>
-                    </Alert>
 
+                <div className="w-full flex-row flex pt-20 gap-x-10">
+                    <div className="w-full flex-col flex self-start gap-y-10">
 
-                    <Card className='w-[600]'>
-                        <CardHeader>
-                            <CardTitle>Card Title</CardTitle>
-                            <CardDescription>Card Description</CardDescription>
-                        </CardHeader>
-                        <CardContent className='flex flex-col gap-2'>
-                            <Textarea placeholder="Type your message here." />
-                            <Button>Send message</Button>
-                        </CardContent>
-                        <CardFooter>
-                            <p>Card Footer</p>
-                        </CardFooter>
-                    </Card>
+                        <Button variant={'outline'} className='w-[600]'>
+                            <Sparkles className='w-8 h-8' /> Leave it all to Pixy
+                        </Button>
+
+                        <Card className='w-[600]'>
+                            <CardContent className='flex flex-col gap-4 pt-4'>
+                                <div className='flex flex-row justify-between items-center'>
+                                    <p className="flex-1 text-secondary-foreground">Write your post</p>
+                                    <p className='flex-1 text-center'>OR</p>
+                                    <Button variant={'outline'} className='flex-1'>
+                                        <Sparkles className='w-8 h-8' /> Leave it to Pixy
+                                    </Button>
+                                </div>
+                                <Textarea placeholder="Type your message here."
+                                    className='min-h-[200px]'
+                                />
+
+                                <div className='flex flex-row justify-between items-center'>
+                                    <p className="flex-1 text-secondary-foreground">Schedule a post time</p>
+                                    <p className='flex-1 text-center'>OR</p>
+                                    <Button variant={'outline'} className='flex-1'>
+                                        <Sparkles className='w-8 h-8' /> Leave it to Pixy
+                                    </Button>
+                                </div>
+                                <Input type='datetime-local' className='w-full' />
+
+                                <div className='flex flex-row justify-between items-center'>
+                                    <p className="flex-1 text-secondary-foreground">Select account to be posted to</p>
+                                    <p className='flex-1 text-center'>OR</p>
+                                    <Button variant={'outline'} className='flex-1'>
+                                        <Sparkles className='w-8 h-8' /> Leave it to Pixy
+                                    </Button>
+                                </div>
+                                <SocialMediaCheckboxes />
+
+                            </CardContent>
+                            <CardFooter>
+                                <Button className='w-full'>Schedule</Button>
+                            </CardFooter>
+                        </Card>
+
+                    </div>
+
+                    <Separator orientation="vertical" className='h-full bg-border border-blue-800' />
+
+                    <div className="w-full flex-col flex self-start gap-y-10">
+                        {Array.from({ length: 3 }, (_, i) => <PostCard key={i} className='w-3/4' />)}
+                    </div>
+
 
                 </div>
             </div>

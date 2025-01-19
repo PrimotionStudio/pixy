@@ -6,7 +6,7 @@ function Sidebar() {
     return (
         <div
             id='sidebar'
-            className="container border flex flex-col justify-around items-center rounded-lg h-1/2 w-24 shadow">
+            className="container border flex flex-col justify-around items-center rounded-lg h-1/2 w-20 shadow">
             <Link href={'/home'} title='Home'>
                 <HomeIcon className='w-10 h-10 rounded-full hover:shadow-lg' />
             </Link>
