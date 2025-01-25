@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
-import { Rubik } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
-
-const rubik = Rubik({
-  subsets: ["latin"],
-  variable: "--font-rubik",
-});
-
 
 export const metadata: Metadata = {
   title: "Pixy",
@@ -22,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${rubik.className} antialiased`}
+        className={`antialiased`}
       >
         <NextTopLoader />
         {children}

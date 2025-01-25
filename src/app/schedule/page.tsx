@@ -1,24 +1,10 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
 import Navbar from '@/components/ui/layout/navbar';
 import Sidebar from '@/components/ui/layout/sidebar';
-import {
-    Alert,
-    AlertTitle,
-    AlertDescription
-} from '@/components/ui/alert';
-import {
-    PaperclipIcon,
-    Sparkles,
-    FacebookIcon,
-    InstagramIcon,
-    TwitterIcon,
-    LinkedinIcon
-} from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import {
     Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
     CardContent,
     CardFooter
 } from '@/components/ui/card';
@@ -28,16 +14,33 @@ import { Input } from '@/components/ui/input';
 import SocialMediaCheckboxes from '@/components/ui/layout/socialMediaCheckboxes';
 import { Separator } from '@/components/ui/separator';
 import PostCard from '@/components/ui/layout/postCard';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function HomePage() {
+    const [post, setPost] = useState<{
+        content: string,
+        scheduledDate: Date,
+        socialMediaAccounts: string[];
+    }>({
+        content: "",
+        scheduledDate: new Date(),
+        socialMediaAccounts: [],
+    });
+    function schedulePost() {
+        toast('Post scheduled successfully');
+        toast(`content ${post.content}`);
+        toast(`scheduledDate ${post.scheduledDate}`);
+        toast(`socialMediaAccounts ${post.socialMediaAccounts}`);
+    }
+
     return (
         <div className="h-screen flex flex-col">
             <Navbar />
             <div className="w-full flex-1 flex justify-start items-center gap-x-20">
                 <Sidebar />
 
-                <div className="w-full flex-row flex pt-20 gap-x-10">
+                <div className="w-full flex-row flex gap-x-10">
                     <div className="w-full flex-col flex self-start gap-y-10">
 
                         <Button variant={'outline'} className='w-[600]'>
@@ -53,7 +56,9 @@ function HomePage() {
                                         <Sparkles className='w-8 h-8' /> Leave it to Pixy
                                     </Button>
                                 </div>
-                                <Textarea placeholder="Type your message here."
+                                <Textarea
+                                    onChange={(e) => setPost({ ...post, content: e.target.value })}
+                                    placeholder="Type your message here."
                                     className='min-h-[200px]'
                                 />
 
@@ -64,7 +69,11 @@ function HomePage() {
                                         <Sparkles className='w-8 h-8' /> Leave it to Pixy
                                     </Button>
                                 </div>
-                                <Input type='datetime-local' className='w-full' />
+                                <Input
+                                    type='datetime-local'
+                                    className='w-full'
+                                    onChange={(e) => setPost({ ...post, scheduledDate: new Date(e.target.value) })}
+                                />
 
                                 <div className='flex flex-row justify-between items-center'>
                                     <p className="flex-1 text-secondary-foreground">Select account to be posted to</p>
@@ -73,11 +82,17 @@ function HomePage() {
                                         <Sparkles className='w-8 h-8' /> Leave it to Pixy
                                     </Button>
                                 </div>
-                                <SocialMediaCheckboxes />
+                                <SocialMediaCheckboxes
+                                    accounts={post.socialMediaAccounts}
+                                    setAccounts={(accounts: string[]) => setPost({ ...post, socialMediaAccounts: accounts })}
+                                />
 
                             </CardContent>
                             <CardFooter>
-                                <Button className='w-full'>Schedule</Button>
+                                <Button
+                                    className='w-full'
+                                    onClick={schedulePost}
+                                >Schedule</Button>
                             </CardFooter>
                         </Card>
 

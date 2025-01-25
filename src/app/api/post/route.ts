@@ -1,20 +1,46 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {
+    NextRequest,
+    NextResponse
+} from 'next/server';
 import Post from '@/models/Post';
 import connect from '@/database';
 
 export async function POST(request: NextRequest) {
-    const { scheduledDate, content, author, socialMediaAccount, aiGenerated } = await request.json();
-    if (!scheduledDate || !content || !author || !socialMediaAccount)
+    const {
+        scheduledDate,
+        content,
+        author,
+        socialMediaAccounts,
+        aiGenerated
+    }: {
+        scheduledDate: Date,
+        content: string,
+        author: string,
+        socialMediaAccounts: string[],
+        aiGenerated: boolean;
+    } = await request.json();
+    if (!scheduledDate ||
+        !content ||
+        !author ||
+        !socialMediaAccounts)
         return NextResponse.json({ message: 'Missing required parameters' }, { status: 400 });
     try {
         await connect();
-        const post = await Post.create({ scheduledDate, content, author, socialMediaAccount, aiGenerated });
+        const post = await Post.create({
+            scheduledDate,
+            content,
+            author,
+            socialMediaAccounts,
+            aiGenerated
+        });
         return NextResponse.json({
             message: 'New post scheduled successfully',
             post
         }, { status: 201 });
     } catch (error) {
-        if (error instanceof Error) return NextResponse.json({ message: error.message }, { status: 500 });
+        if (error instanceof Error)
+            return NextResponse.json({ message: error.message },
+                { status: 500 });
         return NextResponse.json({ message: 'Error creating post' }, { status: 500 });
     }
 }

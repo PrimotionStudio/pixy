@@ -9,15 +9,15 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    socialMediaAccount: {
-        type: String,
-        required: true,
-    },
-    // socialMediaAccounts: {
-    //     type: [String],
+    // socialMediaAccount: {
+    //     type: String,
     //     required: true,
-    //     enum: ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube', 'tiktok'],
     // },
+    socialMediaAccounts: {
+        type: [String],
+        required: true,
+        enum: ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube', 'tiktok'],
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

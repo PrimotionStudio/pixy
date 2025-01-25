@@ -15,6 +15,7 @@ type SocialMediaAccount = {
     color: string;  // Hex color code
 };
 
+
 const socialMediaAccounts: SocialMediaAccount[] = [
     { name: "Facebook", icon: FaFacebook, color: "#1877F2" },
     { name: "Twitter", icon: FaTwitter, color: "#1DA1F2" },
@@ -23,7 +24,7 @@ const socialMediaAccounts: SocialMediaAccount[] = [
     // { name: "YouTube", icon: FaYoutube, color: "#FF0000" },
 ];
 
-export default function SocialMediaCheckboxes() {
+export default function SocialMediaCheckboxes({ accounts, setAccounts }: { accounts: string[], setAccounts: (accounts: string[]) => void; }) {
     const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
 
     const toggleSelection = (name: string) => {
