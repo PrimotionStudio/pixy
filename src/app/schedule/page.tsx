@@ -18,6 +18,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios, { AxiosError } from 'axios';
 import { StoreUserSession } from '@/state/userState';
 import { ClockLoader } from 'react-spinners';
+import { useRouter } from 'next/navigation';
 
 interface Post {
     content: string;
@@ -26,6 +27,7 @@ interface Post {
 }
 
 function HomePage() {
+    const router = useRouter();
     const user = StoreUserSession((state) => state.user);
     const [post, setPost] = useState<Post>({
         content: "",
@@ -62,6 +64,8 @@ function HomePage() {
                 if (response.status == 200) {
                     console.log(response.data.posts);
                     // setPosts(response.data);
+                } else if (response.status == 401) {
+                    router.push('/');
                 }
             } catch (error: AxiosError | any) {
                 toast.error(`An error occured: ${error.response?.data.error || error.message}`);

@@ -22,8 +22,13 @@ export async function POST(request: NextRequest) {
     if (!scheduledDate ||
         !content ||
         !author ||
-        !socialMediaAccounts)
+        !socialMediaAccounts) {
+        console.log('scheduledDate', scheduledDate);
+        console.log('content', content);
+        console.log('author', author);
+        console.log('socialMediaAccounts', socialMediaAccounts);
         return NextResponse.json({ message: 'Missing required parameters' }, { status: 400 });
+    }
     try {
         await connect();
         const post = await Post.create({
