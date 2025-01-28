@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Navbar from '@/components/ui/layout/navbar';
 import Sidebar from '@/components/ui/layout/sidebar';
 import { Sparkles } from 'lucide-react';
@@ -15,25 +15,68 @@ import SocialMediaCheckboxes from '@/components/ui/layout/socialMediaCheckboxes'
 import { Separator } from '@/components/ui/separator';
 import PostCard from '@/components/ui/layout/postCard';
 import toast, { Toaster } from 'react-hot-toast';
+import axios, { AxiosError } from 'axios';
+import { StoreUserSession } from '@/state/userState';
+import { ClockLoader } from 'react-spinners';
 
+interface Post {
+    content: string;
+    scheduledDate: Date;
+    socialMediaAccounts: string[];
+}
 
 function HomePage() {
-    const [post, setPost] = useState<{
-        content: string,
-        scheduledDate: Date,
-        socialMediaAccounts: string[];
-    }>({
+    const user = StoreUserSession((state) => state.user);
+    const [post, setPost] = useState<Post>({
         content: "",
         scheduledDate: new Date(),
         socialMediaAccounts: [],
     });
-    function schedulePost() {
-        toast('Post scheduled successfully');
-        toast(`content ${post.content}`);
-        toast(`scheduledDate ${post.scheduledDate}`);
-        toast(`socialMediaAccounts ${post.socialMediaAccounts}`);
+    const [posts, setPosts] = useState<Post[]>([]);
+    async function schedulePost() {
+        try {
+            if (user) {
+                const response = await axios.post('/api/post', { ...post, author: `${user._id}` });
+                if (response.status == 201) {
+                    toast.success('Post scheduled successfully');
+                    console.log("hey");
+                    setPost({
+                        content: "",
+                        scheduledDate: new Date(),
+                        socialMediaAccounts: [],
+                    });
+                }
+            } else {
+                throw new Error('Cannot read user');
+            }
+        } catch (error: AxiosError | any) {
+            toast.error(`An error occured: ${error.response?.data.error || error.message}`);
+        }
     }
 
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get('/api/posts');
+                if (response.status == 200) {
+                    console.log(response.data.posts);
+                    // setPosts(response.data);
+                }
+            } catch (error: AxiosError | any) {
+                toast.error(`An error occured: ${error.response?.data.error || error.message}`);
+            }
+        };
+        if (user) fetchPosts();
+    }, [user]);
+
+    if (!user) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <ClockLoader />
+            </div>
+        );
+    }
     return (
         <div className="h-screen flex flex-col">
             <Navbar />
@@ -83,7 +126,6 @@ function HomePage() {
                                     </Button>
                                 </div>
                                 <SocialMediaCheckboxes
-                                    accounts={post.socialMediaAccounts}
                                     setAccounts={(accounts: string[]) => setPost({ ...post, socialMediaAccounts: accounts })}
                                 />
 
@@ -101,13 +143,14 @@ function HomePage() {
                     <Separator orientation="vertical" className='h-full bg-border border-blue-800' />
 
                     <div className="w-full flex-col flex self-start gap-y-10">
-                        {Array.from({ length: 3 }, (_, i) => <PostCard key={i} className='w-3/4' />)}
+                        {Array.from({ length: 3 }, (_, i) => <PostCard key={i} postsArray={[]} className='w-3/4' />)}
                     </div>
 
 
                 </div>
             </div>
-        </div >
+            <Toaster />
+        </div>
     );
 }
 

@@ -18,23 +18,26 @@ import { BeatLoader } from 'react-spinners';
 import axios, { AxiosError } from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
+import { StoreUserSession } from '@/state/userState';
 
 export default function LoginPage() {
     const router = useRouter();
     const [isLoading, setLoading] = useState(false);
-    const [user, setUser] = useState(
+    const [User, SetUser] = useState(
         {
             email: '',
             password: '',
         });
+    const { user, setUser } = StoreUserSession();
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('/api/login', user);
+            const response = await axios.post('/api/login', User);
             if (response.status == 200) {
                 toast.success('Login successful');
+                setUser(response.data.user);
                 router.push('/home');
             } else {
                 toast.error('A login error occured');
@@ -75,8 +78,8 @@ export default function LoginPage() {
                             <Input
                                 id="email"
                                 type="email"
-                                value={user.email}
-                                onChange={(e) => setUser({ ...user, email: e.target.value })}
+                                value={User.email}
+                                onChange={(e) => SetUser({ ...User, email: e.target.value })}
                                 placeholder="john@example.com"
                                 required />
                         </div>
@@ -85,8 +88,8 @@ export default function LoginPage() {
                             <Input
                                 id="password"
                                 type="password"
-                                value={user.password}
-                                onChange={(e) => setUser({ ...user, password: e.target.value })}
+                                value={User.password}
+                                onChange={(e) => SetUser({ ...User, password: e.target.value })}
                                 required />
                         </div>
                     </CardContent>

@@ -33,7 +33,16 @@ export const POST = async (request: NextRequest) => {
             { expiresIn: '1d', }
         );
         return NextResponse.json(
-            { message: 'Login successful' },
+            {
+                message: 'Login successful',
+                user: {
+                    _id: user._id as String,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    email: user.email,
+                    phone: user.phone
+                }
+            },
             {
                 status: 200,
                 headers: { 'Set-Cookie': `token=${token}; HttpOnly; Path=/; Max-Age=3600;` },

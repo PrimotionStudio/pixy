@@ -1,4 +1,5 @@
-import React from 'react';
+"use client";
+import React, { useEffect, useState } from 'react';
 import Navbar from '@/components/ui/layout/navbar';
 import Sidebar from '@/components/ui/layout/sidebar';
 import {
@@ -6,25 +7,54 @@ import {
     AlertTitle,
     AlertDescription
 } from '@/components/ui/alert';
-import {
-    Sparkles,
-    FacebookIcon,
-    InstagramIcon,
-    TwitterIcon,
-    LinkedinIcon
-} from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import {
     Card,
-    CardHeader,
     CardTitle,
     CardDescription,
     CardContent,
-    CardFooter
 } from '@/components/ui/card';
+import { ClockLoader } from 'react-spinners';
 import PostCard from '@/components/ui/layout/postCard';
+import { StoreUserSession } from '@/state/userState';
+import axios, { AxiosError } from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 
+interface Post {
+    content: string;
+    scheduledDate: Date;
+    socialMediaAccounts: string[];
+}
 function HomePage() {
+    const { setUser } = StoreUserSession();
+    const user = StoreUserSession((state) => state.user);
+    const [posts, setPosts] = useState<Post[]>([]);
+
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get('/api/posts');
+                if (response.status == 200) {
+                    console.log(`Hey: `, response.data.posts);
+                    // setPosts(response.data);
+                }
+            } catch (error: AxiosError | any) {
+                toast.error(`An error occured: ${error.response?.data.error || error.message}`);
+            }
+        };
+        if (user) fetchPosts();
+    }, [user]);
+
+    if (!user) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <ClockLoader />
+            </div>
+        );
+    }
+
     return (
         <div className="h-screen flex flex-col">
             <Navbar />
@@ -67,12 +97,13 @@ function HomePage() {
                         <div>
                             <h1 className='text-2xl font-bold'>Next Post</h1>
                             <p className='text-muted-foreground mb-2'>You have 3 scheduled posts left</p>
-                            <PostCard />
+                            <PostCard postsArray={posts} />
                         </div>
                     </div>
                 </div>
             </div>
-        </div >
+            <Toaster />
+        </div>
     );
 }
 

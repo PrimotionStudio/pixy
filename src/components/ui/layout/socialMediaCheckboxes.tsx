@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     FaFacebook,
     FaTwitter,
@@ -24,7 +24,7 @@ const socialMediaAccounts: SocialMediaAccount[] = [
     // { name: "YouTube", icon: FaYoutube, color: "#FF0000" },
 ];
 
-export default function SocialMediaCheckboxes({ accounts, setAccounts }: { accounts: string[], setAccounts: (accounts: string[]) => void; }) {
+export default function SocialMediaCheckboxes({ setAccounts }: { setAccounts: (accounts: string[]) => void; }) {
     const [selectedAccounts, setSelectedAccounts] = useState<string[]>([]);
 
     const toggleSelection = (name: string) => {
@@ -34,6 +34,10 @@ export default function SocialMediaCheckboxes({ accounts, setAccounts }: { accou
                 : [...prev, name]
         );
     };
+
+    useEffect(() => {
+        setAccounts(selectedAccounts);
+    }, [selectedAccounts]);
 
     return (
         <div className="flex gap-4">

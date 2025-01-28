@@ -13,7 +13,6 @@ function Navbar() {
             <Link href={'#'}>
                 <Settings className='w-8 h-8' />
             </Link>
-
         </div>
     );
 }

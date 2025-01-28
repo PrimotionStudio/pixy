@@ -7,21 +7,35 @@ import {
 import React from 'react';
 import {
     Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
     CardContent,
     CardFooter
 } from '@/components/ui/card';
 
-function PostCard({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+interface Post {
+    content: string,
+    scheduledDate: Date,
+    socialMediaAccounts: string[];
+}
+import { StoreUserSession } from '@/state/userState';
+import { ClockLoader } from 'react-spinners';
+
+function PostCard({ postsArray, className }: { postsArray: Post[], className?: string; }) {
+    const user = StoreUserSession((state) => state.user);
+
+    if (!user) {
+        return (
+            <div className="h-screen flex justify-center items-center">
+                <ClockLoader />
+            </div>
+        );
+    }
     return (
         <Card className={`w-1/2 pt-4 ${className}`}>
             <CardContent className="grid gap-4">
                 <div className=" flex items-center space-x-4 rounded-md border p-4">
                     <div className="flex-1 space-y-1">
                         <p className="text-sm font-medium leading-none">
-                            @PrimeOkanlawon
+                            @{user.firstname}{user.lastname}
                         </p>
                         <p className="text-sm text-muted-foreground">
                             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius omnis cumque asperiores recusandae voluptatem deleniti totam pariatur minus quos laborum.

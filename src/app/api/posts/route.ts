@@ -7,6 +7,7 @@ export const GET = async (request: NextRequest) => {
     try {
         await connect();
         const token = request.cookies.get('token');
+        console.log(token);
         if (!token || token?.value == '') {
             return NextResponse.json(
                 { message: 'No token found' },
